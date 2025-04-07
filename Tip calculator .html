@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tip Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+        #top {
+            background-color: burlywood;
+            color: whitesmoke;
+            text-align: center;
+            padding: 20px;
+        }
+        #head h2{
+            padding-bottom: 10px;
+        }
+        #head {
+            max-width: 600px;
+            width: 90%;
+            background-color: thistle;
+            margin-top: 50px;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        #head form {
+            padding: 20px 0;
+        }
+        input {
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid black;
+            height: 25px;
+            padding-left: 10px;
+            width: 200px;
+            font-size: 16px;
+        }
+        input:focus {
+            outline: none;
+            border-color: red;
+        }
+        button {
+            width: 100px;
+            height: 40px;
+            background-color: chocolate;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #result-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        #result {
+            background-color: darkgray;
+            color: white;
+            max-width: 500px;
+            width: 90%;
+            padding: 20px;
+            border-top: 2px dashed #333;
+            border-bottom: 2px dashed #333;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            border-radius: 10px;
+        }
+        #result h3{
+            padding-bottom: 10px;
+        }
+        #result.show {
+            display: block;
+            opacity: 1;
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="top">Tip Calculator</h1>
+
+    <div class="container">
+        <div id="head">
+            <form id="tip-form">
+                <h2>Bill Amount: <input type="number" id="billamt" placeholder="Enter Bill Amount" min="0"></h2>
+                <h2>Tip Percentage: <input type="number" id="tipp" placeholder="Enter Tip Percentage" min="0"></h2>
+                <h2>Number of People: <input type="number" id="nop" placeholder="Enter Number of People" min="1"></h2>
+                <div>
+                    <button type="submit">Calculate</button>
+                    <button type="button" onclick="resetForm()">Reset</button>
+                </div>
+                <p id="error">Please enter valid inputs for all fields.</p>
+            </form>
+        </div>
+    </div>
+
+    <div id="result-container">
+        <div id="result">
+            <h3 id="restipamt"> </h3>
+            <h3 id="tperperson"></h3>
+            <h3 id="totalperperson"></h3>
+        </div>
+    </div>
+
+    <script>
+        const billamt = document.getElementById("billamt");
+        const tip = document.getElementById("tipp");
+        const nop = document.getElementById("nop");
+        const restipamt = document.getElementById("restipamt");
+        const tipperperson = document.getElementById("tperperson");
+        const totalperperson = document.getElementById("totalperperson");
+        const resultbox = document.getElementById("result");
+        const errorMsg = document.getElementById("error");
+        const form = document.getElementById("tip-form");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const billamtvalue = parseFloat(billamt.value);
+            const tipvalue = parseFloat(tip.value);
+            const numpeople = parseInt(nop.value);
+
+            if (
+                isNaN(billamtvalue) || billamtvalue <= 0 ||
+                isNaN(tipvalue) || tipvalue < 0 ||
+                isNaN(numpeople) || numpeople <= 0
+            ) {
+                errorMsg.style.display = "block";
+                resultbox.classList.remove("show");
+                return;
+            }
+
+            errorMsg.style.display = "none";
+
+            const totalTip = (billamtvalue * tipvalue) / 100;
+            const tipPerPerson = totalTip / numpeople;
+            const totalper = (billamtvalue / numpeople) + tipPerPerson;
+
+            restipamt.innerText = "Tip amount = $ " + totalTip.toFixed(2);
+            tipperperson.innerText = "Tip per Person = $ " + tipPerPerson.toFixed(2);
+            totalperperson.innerText = "Total amount per person = $ " + totalper.toFixed(2);
+
+            resultbox.classList.add("show");
+        });
+
+        function resetForm() {
+            form.reset();
+            errorMsg.style.display = "none";
+            resultbox.classList.remove("show");
+        }
+    </script>
+</body>
+</html>
